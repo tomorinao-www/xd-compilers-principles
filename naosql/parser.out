@@ -1,13 +1,5 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    GE
-    GT
-    LE
-    LT
-    NE
-
 Grammar
 
 Rule 0     S' -> statements
@@ -39,51 +31,64 @@ Rule 25    value_list -> value
 Rule 26    value_list -> value_list COMMA value
 Rule 27    value -> NUMBER
 Rule 28    value -> STRING
-Rule 29    select -> SELECT STAR FROM ID
-Rule 30    update -> UPDATE ID SET ID EQ value where_clause_opt
-Rule 31    delete -> DELETE FROM ID where_clause_opt
-Rule 32    drop_table -> DROP TABLE ID
-Rule 33    drop_database -> DROP DATABASE ID
-Rule 34    exit -> EXIT
-Rule 35    where_clause_opt -> WHERE ID EQ value
-Rule 36    where_clause_opt -> empty
-Rule 37    empty -> <empty>
+Rule 29    value -> ID
+Rule 30    select -> SELECT STAR FROM ID
+Rule 31    update -> UPDATE ID SET ID EQ value where_clause_opt
+Rule 32    delete -> DELETE FROM ID where_clause_opt
+Rule 33    drop_table -> DROP TABLE ID
+Rule 34    drop_database -> DROP DATABASE ID
+Rule 35    exit -> EXIT
+Rule 36    where_clause_opt -> WHERE expr
+Rule 37    where_clause_opt -> empty
+Rule 38    expr -> expr AND expr
+Rule 39    expr -> expr OR expr
+Rule 40    expr -> value EQ value
+Rule 41    expr -> value NE value
+Rule 42    expr -> value LT value
+Rule 43    expr -> value LE value
+Rule 44    expr -> value GT value
+Rule 45    expr -> value GE value
+Rule 46    expr -> LPAREN expr RPAREN
+Rule 47    expr -> value
+Rule 48    empty -> <empty>
 
 Terminals, with rules where they appear
 
+AND                  : 38
 CHAR                 : 22
 COMMA                : 20 26
 CREATE               : 16 18
-DATABASE             : 16 33
-DELETE               : 31
-DROP                 : 32 33
-EQ                   : 30 35
-EXIT                 : 34
-FROM                 : 29 31
-GE                   : 
-GT                   : 
-ID                   : 16 17 18 21 22 24 29 30 30 31 32 33 35
+DATABASE             : 16 34
+DELETE               : 32
+DROP                 : 33 34
+EQ                   : 31 40
+EXIT                 : 35
+FROM                 : 30 32
+GE                   : 45
+GT                   : 44
+ID                   : 16 17 18 21 22 24 29 30 31 31 32 33 34
 INSERT               : 24
 INT                  : 21
 INTO                 : 24
-LE                   : 
-LPAREN               : 18 22 24
-LT                   : 
-NE                   : 
+LE                   : 43
+LPAREN               : 18 22 24 46
+LT                   : 42
+NE                   : 41
 NUMBER               : 22 27
-RPAREN               : 18 22 24
-SELECT               : 29
+OR                   : 39
+RPAREN               : 18 22 24 46
+SELECT               : 30
 SEMICOLON            : 3
-SET                  : 30
+SET                  : 31
 SHOW                 : 23
-STAR                 : 29
+STAR                 : 30
 STRING               : 28
-TABLE                : 18 32
+TABLE                : 18 33
 TABLES               : 23
-UPDATE               : 30
+UPDATE               : 31
 USE                  : 17
 VALUES               : 24
-WHERE                : 35
+WHERE                : 36
 error                : 
 
 Nonterminals, with rules where they appear
@@ -96,8 +101,9 @@ create_table         : 7
 delete               : 12
 drop_database        : 14
 drop_table           : 13
-empty                : 36
+empty                : 37
 exit                 : 15
+expr                 : 36 38 38 39 39 46
 insert               : 9
 select               : 10
 show_tables          : 8
@@ -105,9 +111,9 @@ statement            : 1 2
 statements           : 1 0
 update               : 11
 use_database         : 6
-value                : 25 26 30 35
+value                : 25 26 31 40 40 41 41 42 42 43 43 44 44 45 45 47
 value_list           : 24 26
-where_clause_opt     : 30 31
+where_clause_opt     : 31 32
 
 Parsing method: LALR
 
@@ -134,12 +140,12 @@ state 0
     (18) create_table -> . CREATE TABLE ID LPAREN column_def_list RPAREN
     (23) show_tables -> . SHOW TABLES
     (24) insert -> . INSERT INTO ID VALUES LPAREN value_list RPAREN
-    (29) select -> . SELECT STAR FROM ID
-    (30) update -> . UPDATE ID SET ID EQ value where_clause_opt
-    (31) delete -> . DELETE FROM ID where_clause_opt
-    (32) drop_table -> . DROP TABLE ID
-    (33) drop_database -> . DROP DATABASE ID
-    (34) exit -> . EXIT
+    (30) select -> . SELECT STAR FROM ID
+    (31) update -> . UPDATE ID SET ID EQ value where_clause_opt
+    (32) delete -> . DELETE FROM ID where_clause_opt
+    (33) drop_table -> . DROP TABLE ID
+    (34) drop_database -> . DROP DATABASE ID
+    (35) exit -> . EXIT
 
     CREATE          shift and go to state 15
     USE             shift and go to state 16
@@ -188,12 +194,12 @@ state 1
     (18) create_table -> . CREATE TABLE ID LPAREN column_def_list RPAREN
     (23) show_tables -> . SHOW TABLES
     (24) insert -> . INSERT INTO ID VALUES LPAREN value_list RPAREN
-    (29) select -> . SELECT STAR FROM ID
-    (30) update -> . UPDATE ID SET ID EQ value where_clause_opt
-    (31) delete -> . DELETE FROM ID where_clause_opt
-    (32) drop_table -> . DROP TABLE ID
-    (33) drop_database -> . DROP DATABASE ID
-    (34) exit -> . EXIT
+    (30) select -> . SELECT STAR FROM ID
+    (31) update -> . UPDATE ID SET ID EQ value where_clause_opt
+    (32) delete -> . DELETE FROM ID where_clause_opt
+    (33) drop_table -> . DROP TABLE ID
+    (34) drop_database -> . DROP DATABASE ID
+    (35) exit -> . EXIT
 
     CREATE          shift and go to state 15
     USE             shift and go to state 16
@@ -472,29 +478,29 @@ state 18
 
 state 19
 
-    (29) select -> SELECT . STAR FROM ID
+    (30) select -> SELECT . STAR FROM ID
 
     STAR            shift and go to state 31
 
 
 state 20
 
-    (30) update -> UPDATE . ID SET ID EQ value where_clause_opt
+    (31) update -> UPDATE . ID SET ID EQ value where_clause_opt
 
     ID              shift and go to state 32
 
 
 state 21
 
-    (31) delete -> DELETE . FROM ID where_clause_opt
+    (32) delete -> DELETE . FROM ID where_clause_opt
 
     FROM            shift and go to state 33
 
 
 state 22
 
-    (32) drop_table -> DROP . TABLE ID
-    (33) drop_database -> DROP . DATABASE ID
+    (33) drop_table -> DROP . TABLE ID
+    (34) drop_database -> DROP . DATABASE ID
 
     TABLE           shift and go to state 34
     DATABASE        shift and go to state 35
@@ -502,19 +508,19 @@ state 22
 
 state 23
 
-    (34) exit -> EXIT .
+    (35) exit -> EXIT .
 
-    SEMICOLON       reduce using rule 34 (exit -> EXIT .)
-    CREATE          reduce using rule 34 (exit -> EXIT .)
-    USE             reduce using rule 34 (exit -> EXIT .)
-    SHOW            reduce using rule 34 (exit -> EXIT .)
-    INSERT          reduce using rule 34 (exit -> EXIT .)
-    SELECT          reduce using rule 34 (exit -> EXIT .)
-    UPDATE          reduce using rule 34 (exit -> EXIT .)
-    DELETE          reduce using rule 34 (exit -> EXIT .)
-    DROP            reduce using rule 34 (exit -> EXIT .)
-    EXIT            reduce using rule 34 (exit -> EXIT .)
-    $end            reduce using rule 34 (exit -> EXIT .)
+    SEMICOLON       reduce using rule 35 (exit -> EXIT .)
+    CREATE          reduce using rule 35 (exit -> EXIT .)
+    USE             reduce using rule 35 (exit -> EXIT .)
+    SHOW            reduce using rule 35 (exit -> EXIT .)
+    INSERT          reduce using rule 35 (exit -> EXIT .)
+    SELECT          reduce using rule 35 (exit -> EXIT .)
+    UPDATE          reduce using rule 35 (exit -> EXIT .)
+    DELETE          reduce using rule 35 (exit -> EXIT .)
+    DROP            reduce using rule 35 (exit -> EXIT .)
+    EXIT            reduce using rule 35 (exit -> EXIT .)
+    $end            reduce using rule 35 (exit -> EXIT .)
 
 
 state 24
@@ -606,35 +612,35 @@ state 30
 
 state 31
 
-    (29) select -> SELECT STAR . FROM ID
+    (30) select -> SELECT STAR . FROM ID
 
     FROM            shift and go to state 39
 
 
 state 32
 
-    (30) update -> UPDATE ID . SET ID EQ value where_clause_opt
+    (31) update -> UPDATE ID . SET ID EQ value where_clause_opt
 
     SET             shift and go to state 40
 
 
 state 33
 
-    (31) delete -> DELETE FROM . ID where_clause_opt
+    (32) delete -> DELETE FROM . ID where_clause_opt
 
     ID              shift and go to state 41
 
 
 state 34
 
-    (32) drop_table -> DROP TABLE . ID
+    (33) drop_table -> DROP TABLE . ID
 
     ID              shift and go to state 42
 
 
 state 35
 
-    (33) drop_database -> DROP DATABASE . ID
+    (34) drop_database -> DROP DATABASE . ID
 
     ID              shift and go to state 43
 
@@ -672,73 +678,73 @@ state 38
 
 state 39
 
-    (29) select -> SELECT STAR FROM . ID
+    (30) select -> SELECT STAR FROM . ID
 
     ID              shift and go to state 46
 
 
 state 40
 
-    (30) update -> UPDATE ID SET . ID EQ value where_clause_opt
+    (31) update -> UPDATE ID SET . ID EQ value where_clause_opt
 
     ID              shift and go to state 47
 
 
 state 41
 
-    (31) delete -> DELETE FROM ID . where_clause_opt
-    (35) where_clause_opt -> . WHERE ID EQ value
-    (36) where_clause_opt -> . empty
-    (37) empty -> .
+    (32) delete -> DELETE FROM ID . where_clause_opt
+    (36) where_clause_opt -> . WHERE expr
+    (37) where_clause_opt -> . empty
+    (48) empty -> .
 
     WHERE           shift and go to state 49
-    SEMICOLON       reduce using rule 37 (empty -> .)
-    CREATE          reduce using rule 37 (empty -> .)
-    USE             reduce using rule 37 (empty -> .)
-    SHOW            reduce using rule 37 (empty -> .)
-    INSERT          reduce using rule 37 (empty -> .)
-    SELECT          reduce using rule 37 (empty -> .)
-    UPDATE          reduce using rule 37 (empty -> .)
-    DELETE          reduce using rule 37 (empty -> .)
-    DROP            reduce using rule 37 (empty -> .)
-    EXIT            reduce using rule 37 (empty -> .)
-    $end            reduce using rule 37 (empty -> .)
+    SEMICOLON       reduce using rule 48 (empty -> .)
+    CREATE          reduce using rule 48 (empty -> .)
+    USE             reduce using rule 48 (empty -> .)
+    SHOW            reduce using rule 48 (empty -> .)
+    INSERT          reduce using rule 48 (empty -> .)
+    SELECT          reduce using rule 48 (empty -> .)
+    UPDATE          reduce using rule 48 (empty -> .)
+    DELETE          reduce using rule 48 (empty -> .)
+    DROP            reduce using rule 48 (empty -> .)
+    EXIT            reduce using rule 48 (empty -> .)
+    $end            reduce using rule 48 (empty -> .)
 
     where_clause_opt               shift and go to state 48
     empty                          shift and go to state 50
 
 state 42
 
-    (32) drop_table -> DROP TABLE ID .
+    (33) drop_table -> DROP TABLE ID .
 
-    SEMICOLON       reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    CREATE          reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    USE             reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    SHOW            reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    INSERT          reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    SELECT          reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    UPDATE          reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    DELETE          reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    DROP            reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    EXIT            reduce using rule 32 (drop_table -> DROP TABLE ID .)
-    $end            reduce using rule 32 (drop_table -> DROP TABLE ID .)
+    SEMICOLON       reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    CREATE          reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    USE             reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    SHOW            reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    INSERT          reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    SELECT          reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    UPDATE          reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    DELETE          reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    DROP            reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    EXIT            reduce using rule 33 (drop_table -> DROP TABLE ID .)
+    $end            reduce using rule 33 (drop_table -> DROP TABLE ID .)
 
 
 state 43
 
-    (33) drop_database -> DROP DATABASE ID .
+    (34) drop_database -> DROP DATABASE ID .
 
-    SEMICOLON       reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    CREATE          reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    USE             reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    SHOW            reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    INSERT          reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    SELECT          reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    UPDATE          reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    DELETE          reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    DROP            reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    EXIT            reduce using rule 33 (drop_database -> DROP DATABASE ID .)
-    $end            reduce using rule 33 (drop_database -> DROP DATABASE ID .)
+    SEMICOLON       reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    CREATE          reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    USE             reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    SHOW            reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    INSERT          reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    SELECT          reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    UPDATE          reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    DELETE          reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    DROP            reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    EXIT            reduce using rule 34 (drop_database -> DROP DATABASE ID .)
+    $end            reduce using rule 34 (drop_database -> DROP DATABASE ID .)
 
 
 state 44
@@ -763,67 +769,85 @@ state 45
 
 state 46
 
-    (29) select -> SELECT STAR FROM ID .
+    (30) select -> SELECT STAR FROM ID .
 
-    SEMICOLON       reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    CREATE          reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    USE             reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    SHOW            reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    INSERT          reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    SELECT          reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    UPDATE          reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    DELETE          reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    DROP            reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    EXIT            reduce using rule 29 (select -> SELECT STAR FROM ID .)
-    $end            reduce using rule 29 (select -> SELECT STAR FROM ID .)
+    SEMICOLON       reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    CREATE          reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    USE             reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    SHOW            reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    INSERT          reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    SELECT          reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    UPDATE          reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    DELETE          reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    DROP            reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    EXIT            reduce using rule 30 (select -> SELECT STAR FROM ID .)
+    $end            reduce using rule 30 (select -> SELECT STAR FROM ID .)
 
 
 state 47
 
-    (30) update -> UPDATE ID SET ID . EQ value where_clause_opt
+    (31) update -> UPDATE ID SET ID . EQ value where_clause_opt
 
     EQ              shift and go to state 55
 
 
 state 48
 
-    (31) delete -> DELETE FROM ID where_clause_opt .
+    (32) delete -> DELETE FROM ID where_clause_opt .
 
-    SEMICOLON       reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    CREATE          reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    USE             reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    SHOW            reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    INSERT          reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    SELECT          reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    UPDATE          reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    DELETE          reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    DROP            reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    EXIT            reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
-    $end            reduce using rule 31 (delete -> DELETE FROM ID where_clause_opt .)
+    SEMICOLON       reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    CREATE          reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    USE             reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    SHOW            reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    INSERT          reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    SELECT          reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    UPDATE          reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    DELETE          reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    DROP            reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    EXIT            reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
+    $end            reduce using rule 32 (delete -> DELETE FROM ID where_clause_opt .)
 
 
 state 49
 
-    (35) where_clause_opt -> WHERE . ID EQ value
+    (36) where_clause_opt -> WHERE . expr
+    (38) expr -> . expr AND expr
+    (39) expr -> . expr OR expr
+    (40) expr -> . value EQ value
+    (41) expr -> . value NE value
+    (42) expr -> . value LT value
+    (43) expr -> . value LE value
+    (44) expr -> . value GT value
+    (45) expr -> . value GE value
+    (46) expr -> . LPAREN expr RPAREN
+    (47) expr -> . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
 
-    ID              shift and go to state 56
+    LPAREN          shift and go to state 58
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
 
+    expr                           shift and go to state 56
+    value                          shift and go to state 57
 
 state 50
 
-    (36) where_clause_opt -> empty .
+    (37) where_clause_opt -> empty .
 
-    SEMICOLON       reduce using rule 36 (where_clause_opt -> empty .)
-    CREATE          reduce using rule 36 (where_clause_opt -> empty .)
-    USE             reduce using rule 36 (where_clause_opt -> empty .)
-    SHOW            reduce using rule 36 (where_clause_opt -> empty .)
-    INSERT          reduce using rule 36 (where_clause_opt -> empty .)
-    SELECT          reduce using rule 36 (where_clause_opt -> empty .)
-    UPDATE          reduce using rule 36 (where_clause_opt -> empty .)
-    DELETE          reduce using rule 36 (where_clause_opt -> empty .)
-    DROP            reduce using rule 36 (where_clause_opt -> empty .)
-    EXIT            reduce using rule 36 (where_clause_opt -> empty .)
-    $end            reduce using rule 36 (where_clause_opt -> empty .)
+    SEMICOLON       reduce using rule 37 (where_clause_opt -> empty .)
+    CREATE          reduce using rule 37 (where_clause_opt -> empty .)
+    USE             reduce using rule 37 (where_clause_opt -> empty .)
+    SHOW            reduce using rule 37 (where_clause_opt -> empty .)
+    INSERT          reduce using rule 37 (where_clause_opt -> empty .)
+    SELECT          reduce using rule 37 (where_clause_opt -> empty .)
+    UPDATE          reduce using rule 37 (where_clause_opt -> empty .)
+    DELETE          reduce using rule 37 (where_clause_opt -> empty .)
+    DROP            reduce using rule 37 (where_clause_opt -> empty .)
+    EXIT            reduce using rule 37 (where_clause_opt -> empty .)
+    $end            reduce using rule 37 (where_clause_opt -> empty .)
 
 
 state 51
@@ -831,8 +855,8 @@ state 51
     (21) column_def -> ID . INT
     (22) column_def -> ID . CHAR LPAREN NUMBER RPAREN
 
-    INT             shift and go to state 57
-    CHAR            shift and go to state 58
+    INT             shift and go to state 62
+    CHAR            shift and go to state 63
 
 
 state 52
@@ -840,8 +864,8 @@ state 52
     (18) create_table -> CREATE TABLE ID LPAREN column_def_list . RPAREN
     (20) column_def_list -> column_def_list . COMMA column_def
 
-    RPAREN          shift and go to state 59
-    COMMA           shift and go to state 60
+    RPAREN          shift and go to state 64
+    COMMA           shift and go to state 65
 
 
 state 53
@@ -859,32 +883,191 @@ state 54
     (26) value_list -> . value_list COMMA value
     (27) value -> . NUMBER
     (28) value -> . STRING
+    (29) value -> . ID
 
-    NUMBER          shift and go to state 63
-    STRING          shift and go to state 64
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
 
-    value_list                     shift and go to state 61
-    value                          shift and go to state 62
+    value_list                     shift and go to state 66
+    value                          shift and go to state 67
 
 state 55
 
-    (30) update -> UPDATE ID SET ID EQ . value where_clause_opt
+    (31) update -> UPDATE ID SET ID EQ . value where_clause_opt
     (27) value -> . NUMBER
     (28) value -> . STRING
+    (29) value -> . ID
 
-    NUMBER          shift and go to state 63
-    STRING          shift and go to state 64
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
 
-    value                          shift and go to state 65
+    value                          shift and go to state 68
 
 state 56
 
-    (35) where_clause_opt -> WHERE ID . EQ value
+    (36) where_clause_opt -> WHERE expr .
+    (38) expr -> expr . AND expr
+    (39) expr -> expr . OR expr
 
-    EQ              shift and go to state 66
+    SEMICOLON       reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    CREATE          reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    USE             reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    SHOW            reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    INSERT          reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    SELECT          reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    UPDATE          reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    DELETE          reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    DROP            reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    EXIT            reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    $end            reduce using rule 36 (where_clause_opt -> WHERE expr .)
+    AND             shift and go to state 69
+    OR              shift and go to state 70
 
 
 state 57
+
+    (40) expr -> value . EQ value
+    (41) expr -> value . NE value
+    (42) expr -> value . LT value
+    (43) expr -> value . LE value
+    (44) expr -> value . GT value
+    (45) expr -> value . GE value
+    (47) expr -> value .
+
+    EQ              shift and go to state 71
+    NE              shift and go to state 72
+    LT              shift and go to state 73
+    LE              shift and go to state 74
+    GT              shift and go to state 75
+    GE              shift and go to state 76
+    AND             reduce using rule 47 (expr -> value .)
+    OR              reduce using rule 47 (expr -> value .)
+    SEMICOLON       reduce using rule 47 (expr -> value .)
+    CREATE          reduce using rule 47 (expr -> value .)
+    USE             reduce using rule 47 (expr -> value .)
+    SHOW            reduce using rule 47 (expr -> value .)
+    INSERT          reduce using rule 47 (expr -> value .)
+    SELECT          reduce using rule 47 (expr -> value .)
+    UPDATE          reduce using rule 47 (expr -> value .)
+    DELETE          reduce using rule 47 (expr -> value .)
+    DROP            reduce using rule 47 (expr -> value .)
+    EXIT            reduce using rule 47 (expr -> value .)
+    $end            reduce using rule 47 (expr -> value .)
+    RPAREN          reduce using rule 47 (expr -> value .)
+
+
+state 58
+
+    (46) expr -> LPAREN . expr RPAREN
+    (38) expr -> . expr AND expr
+    (39) expr -> . expr OR expr
+    (40) expr -> . value EQ value
+    (41) expr -> . value NE value
+    (42) expr -> . value LT value
+    (43) expr -> . value LE value
+    (44) expr -> . value GT value
+    (45) expr -> . value GE value
+    (46) expr -> . LPAREN expr RPAREN
+    (47) expr -> . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    LPAREN          shift and go to state 58
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    expr                           shift and go to state 77
+    value                          shift and go to state 57
+
+state 59
+
+    (27) value -> NUMBER .
+
+    EQ              reduce using rule 27 (value -> NUMBER .)
+    NE              reduce using rule 27 (value -> NUMBER .)
+    LT              reduce using rule 27 (value -> NUMBER .)
+    LE              reduce using rule 27 (value -> NUMBER .)
+    GT              reduce using rule 27 (value -> NUMBER .)
+    GE              reduce using rule 27 (value -> NUMBER .)
+    AND             reduce using rule 27 (value -> NUMBER .)
+    OR              reduce using rule 27 (value -> NUMBER .)
+    SEMICOLON       reduce using rule 27 (value -> NUMBER .)
+    CREATE          reduce using rule 27 (value -> NUMBER .)
+    USE             reduce using rule 27 (value -> NUMBER .)
+    SHOW            reduce using rule 27 (value -> NUMBER .)
+    INSERT          reduce using rule 27 (value -> NUMBER .)
+    SELECT          reduce using rule 27 (value -> NUMBER .)
+    UPDATE          reduce using rule 27 (value -> NUMBER .)
+    DELETE          reduce using rule 27 (value -> NUMBER .)
+    DROP            reduce using rule 27 (value -> NUMBER .)
+    EXIT            reduce using rule 27 (value -> NUMBER .)
+    $end            reduce using rule 27 (value -> NUMBER .)
+    RPAREN          reduce using rule 27 (value -> NUMBER .)
+    COMMA           reduce using rule 27 (value -> NUMBER .)
+    WHERE           reduce using rule 27 (value -> NUMBER .)
+
+
+state 60
+
+    (28) value -> STRING .
+
+    EQ              reduce using rule 28 (value -> STRING .)
+    NE              reduce using rule 28 (value -> STRING .)
+    LT              reduce using rule 28 (value -> STRING .)
+    LE              reduce using rule 28 (value -> STRING .)
+    GT              reduce using rule 28 (value -> STRING .)
+    GE              reduce using rule 28 (value -> STRING .)
+    AND             reduce using rule 28 (value -> STRING .)
+    OR              reduce using rule 28 (value -> STRING .)
+    SEMICOLON       reduce using rule 28 (value -> STRING .)
+    CREATE          reduce using rule 28 (value -> STRING .)
+    USE             reduce using rule 28 (value -> STRING .)
+    SHOW            reduce using rule 28 (value -> STRING .)
+    INSERT          reduce using rule 28 (value -> STRING .)
+    SELECT          reduce using rule 28 (value -> STRING .)
+    UPDATE          reduce using rule 28 (value -> STRING .)
+    DELETE          reduce using rule 28 (value -> STRING .)
+    DROP            reduce using rule 28 (value -> STRING .)
+    EXIT            reduce using rule 28 (value -> STRING .)
+    $end            reduce using rule 28 (value -> STRING .)
+    RPAREN          reduce using rule 28 (value -> STRING .)
+    COMMA           reduce using rule 28 (value -> STRING .)
+    WHERE           reduce using rule 28 (value -> STRING .)
+
+
+state 61
+
+    (29) value -> ID .
+
+    EQ              reduce using rule 29 (value -> ID .)
+    NE              reduce using rule 29 (value -> ID .)
+    LT              reduce using rule 29 (value -> ID .)
+    LE              reduce using rule 29 (value -> ID .)
+    GT              reduce using rule 29 (value -> ID .)
+    GE              reduce using rule 29 (value -> ID .)
+    AND             reduce using rule 29 (value -> ID .)
+    OR              reduce using rule 29 (value -> ID .)
+    SEMICOLON       reduce using rule 29 (value -> ID .)
+    CREATE          reduce using rule 29 (value -> ID .)
+    USE             reduce using rule 29 (value -> ID .)
+    SHOW            reduce using rule 29 (value -> ID .)
+    INSERT          reduce using rule 29 (value -> ID .)
+    SELECT          reduce using rule 29 (value -> ID .)
+    UPDATE          reduce using rule 29 (value -> ID .)
+    DELETE          reduce using rule 29 (value -> ID .)
+    DROP            reduce using rule 29 (value -> ID .)
+    EXIT            reduce using rule 29 (value -> ID .)
+    $end            reduce using rule 29 (value -> ID .)
+    RPAREN          reduce using rule 29 (value -> ID .)
+    COMMA           reduce using rule 29 (value -> ID .)
+    WHERE           reduce using rule 29 (value -> ID .)
+
+
+state 62
 
     (21) column_def -> ID INT .
 
@@ -892,14 +1075,14 @@ state 57
     COMMA           reduce using rule 21 (column_def -> ID INT .)
 
 
-state 58
+state 63
 
     (22) column_def -> ID CHAR . LPAREN NUMBER RPAREN
 
-    LPAREN          shift and go to state 67
+    LPAREN          shift and go to state 78
 
 
-state 59
+state 64
 
     (18) create_table -> CREATE TABLE ID LPAREN column_def_list RPAREN .
 
@@ -916,7 +1099,7 @@ state 59
     $end            reduce using rule 18 (create_table -> CREATE TABLE ID LPAREN column_def_list RPAREN .)
 
 
-state 60
+state 65
 
     (20) column_def_list -> column_def_list COMMA . column_def
     (21) column_def -> . ID INT
@@ -924,18 +1107,18 @@ state 60
 
     ID              shift and go to state 51
 
-    column_def                     shift and go to state 68
+    column_def                     shift and go to state 79
 
-state 61
+state 66
 
     (24) insert -> INSERT INTO ID VALUES LPAREN value_list . RPAREN
     (26) value_list -> value_list . COMMA value
 
-    RPAREN          shift and go to state 69
-    COMMA           shift and go to state 70
+    RPAREN          shift and go to state 80
+    COMMA           shift and go to state 81
 
 
-state 62
+state 67
 
     (25) value_list -> value .
 
@@ -943,88 +1126,176 @@ state 62
     COMMA           reduce using rule 25 (value_list -> value .)
 
 
-state 63
+state 68
 
-    (27) value -> NUMBER .
-
-    RPAREN          reduce using rule 27 (value -> NUMBER .)
-    COMMA           reduce using rule 27 (value -> NUMBER .)
-    WHERE           reduce using rule 27 (value -> NUMBER .)
-    SEMICOLON       reduce using rule 27 (value -> NUMBER .)
-    CREATE          reduce using rule 27 (value -> NUMBER .)
-    USE             reduce using rule 27 (value -> NUMBER .)
-    SHOW            reduce using rule 27 (value -> NUMBER .)
-    INSERT          reduce using rule 27 (value -> NUMBER .)
-    SELECT          reduce using rule 27 (value -> NUMBER .)
-    UPDATE          reduce using rule 27 (value -> NUMBER .)
-    DELETE          reduce using rule 27 (value -> NUMBER .)
-    DROP            reduce using rule 27 (value -> NUMBER .)
-    EXIT            reduce using rule 27 (value -> NUMBER .)
-    $end            reduce using rule 27 (value -> NUMBER .)
-
-
-state 64
-
-    (28) value -> STRING .
-
-    RPAREN          reduce using rule 28 (value -> STRING .)
-    COMMA           reduce using rule 28 (value -> STRING .)
-    WHERE           reduce using rule 28 (value -> STRING .)
-    SEMICOLON       reduce using rule 28 (value -> STRING .)
-    CREATE          reduce using rule 28 (value -> STRING .)
-    USE             reduce using rule 28 (value -> STRING .)
-    SHOW            reduce using rule 28 (value -> STRING .)
-    INSERT          reduce using rule 28 (value -> STRING .)
-    SELECT          reduce using rule 28 (value -> STRING .)
-    UPDATE          reduce using rule 28 (value -> STRING .)
-    DELETE          reduce using rule 28 (value -> STRING .)
-    DROP            reduce using rule 28 (value -> STRING .)
-    EXIT            reduce using rule 28 (value -> STRING .)
-    $end            reduce using rule 28 (value -> STRING .)
-
-
-state 65
-
-    (30) update -> UPDATE ID SET ID EQ value . where_clause_opt
-    (35) where_clause_opt -> . WHERE ID EQ value
-    (36) where_clause_opt -> . empty
-    (37) empty -> .
+    (31) update -> UPDATE ID SET ID EQ value . where_clause_opt
+    (36) where_clause_opt -> . WHERE expr
+    (37) where_clause_opt -> . empty
+    (48) empty -> .
 
     WHERE           shift and go to state 49
-    SEMICOLON       reduce using rule 37 (empty -> .)
-    CREATE          reduce using rule 37 (empty -> .)
-    USE             reduce using rule 37 (empty -> .)
-    SHOW            reduce using rule 37 (empty -> .)
-    INSERT          reduce using rule 37 (empty -> .)
-    SELECT          reduce using rule 37 (empty -> .)
-    UPDATE          reduce using rule 37 (empty -> .)
-    DELETE          reduce using rule 37 (empty -> .)
-    DROP            reduce using rule 37 (empty -> .)
-    EXIT            reduce using rule 37 (empty -> .)
-    $end            reduce using rule 37 (empty -> .)
+    SEMICOLON       reduce using rule 48 (empty -> .)
+    CREATE          reduce using rule 48 (empty -> .)
+    USE             reduce using rule 48 (empty -> .)
+    SHOW            reduce using rule 48 (empty -> .)
+    INSERT          reduce using rule 48 (empty -> .)
+    SELECT          reduce using rule 48 (empty -> .)
+    UPDATE          reduce using rule 48 (empty -> .)
+    DELETE          reduce using rule 48 (empty -> .)
+    DROP            reduce using rule 48 (empty -> .)
+    EXIT            reduce using rule 48 (empty -> .)
+    $end            reduce using rule 48 (empty -> .)
 
-    where_clause_opt               shift and go to state 71
+    where_clause_opt               shift and go to state 82
     empty                          shift and go to state 50
 
-state 66
+state 69
 
-    (35) where_clause_opt -> WHERE ID EQ . value
+    (38) expr -> expr AND . expr
+    (38) expr -> . expr AND expr
+    (39) expr -> . expr OR expr
+    (40) expr -> . value EQ value
+    (41) expr -> . value NE value
+    (42) expr -> . value LT value
+    (43) expr -> . value LE value
+    (44) expr -> . value GT value
+    (45) expr -> . value GE value
+    (46) expr -> . LPAREN expr RPAREN
+    (47) expr -> . value
     (27) value -> . NUMBER
     (28) value -> . STRING
+    (29) value -> . ID
 
-    NUMBER          shift and go to state 63
-    STRING          shift and go to state 64
+    LPAREN          shift and go to state 58
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
 
-    value                          shift and go to state 72
+    expr                           shift and go to state 83
+    value                          shift and go to state 57
 
-state 67
+state 70
+
+    (39) expr -> expr OR . expr
+    (38) expr -> . expr AND expr
+    (39) expr -> . expr OR expr
+    (40) expr -> . value EQ value
+    (41) expr -> . value NE value
+    (42) expr -> . value LT value
+    (43) expr -> . value LE value
+    (44) expr -> . value GT value
+    (45) expr -> . value GE value
+    (46) expr -> . LPAREN expr RPAREN
+    (47) expr -> . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    LPAREN          shift and go to state 58
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    expr                           shift and go to state 84
+    value                          shift and go to state 57
+
+state 71
+
+    (40) expr -> value EQ . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    value                          shift and go to state 85
+
+state 72
+
+    (41) expr -> value NE . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    value                          shift and go to state 86
+
+state 73
+
+    (42) expr -> value LT . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    value                          shift and go to state 87
+
+state 74
+
+    (43) expr -> value LE . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    value                          shift and go to state 88
+
+state 75
+
+    (44) expr -> value GT . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    value                          shift and go to state 89
+
+state 76
+
+    (45) expr -> value GE . value
+    (27) value -> . NUMBER
+    (28) value -> . STRING
+    (29) value -> . ID
+
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
+
+    value                          shift and go to state 90
+
+state 77
+
+    (46) expr -> LPAREN expr . RPAREN
+    (38) expr -> expr . AND expr
+    (39) expr -> expr . OR expr
+
+    RPAREN          shift and go to state 91
+    AND             shift and go to state 69
+    OR              shift and go to state 70
+
+
+state 78
 
     (22) column_def -> ID CHAR LPAREN . NUMBER RPAREN
 
-    NUMBER          shift and go to state 73
+    NUMBER          shift and go to state 92
 
 
-state 68
+state 79
 
     (20) column_def_list -> column_def_list COMMA column_def .
 
@@ -1032,7 +1303,7 @@ state 68
     COMMA           reduce using rule 20 (column_def_list -> column_def_list COMMA column_def .)
 
 
-state 69
+state 80
 
     (24) insert -> INSERT INTO ID VALUES LPAREN value_list RPAREN .
 
@@ -1049,59 +1320,234 @@ state 69
     $end            reduce using rule 24 (insert -> INSERT INTO ID VALUES LPAREN value_list RPAREN .)
 
 
-state 70
+state 81
 
     (26) value_list -> value_list COMMA . value
     (27) value -> . NUMBER
     (28) value -> . STRING
+    (29) value -> . ID
 
-    NUMBER          shift and go to state 63
-    STRING          shift and go to state 64
+    NUMBER          shift and go to state 59
+    STRING          shift and go to state 60
+    ID              shift and go to state 61
 
-    value                          shift and go to state 74
+    value                          shift and go to state 93
 
-state 71
+state 82
 
-    (30) update -> UPDATE ID SET ID EQ value where_clause_opt .
+    (31) update -> UPDATE ID SET ID EQ value where_clause_opt .
 
-    SEMICOLON       reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    CREATE          reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    USE             reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    SHOW            reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    INSERT          reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    SELECT          reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    UPDATE          reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    DELETE          reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    DROP            reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    EXIT            reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-    $end            reduce using rule 30 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
-
-
-state 72
-
-    (35) where_clause_opt -> WHERE ID EQ value .
-
-    SEMICOLON       reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    CREATE          reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    USE             reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    SHOW            reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    INSERT          reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    SELECT          reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    UPDATE          reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    DELETE          reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    DROP            reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    EXIT            reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
-    $end            reduce using rule 35 (where_clause_opt -> WHERE ID EQ value .)
+    SEMICOLON       reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    CREATE          reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    USE             reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    SHOW            reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    INSERT          reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    SELECT          reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    UPDATE          reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    DELETE          reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    DROP            reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    EXIT            reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
+    $end            reduce using rule 31 (update -> UPDATE ID SET ID EQ value where_clause_opt .)
 
 
-state 73
+state 83
+
+    (38) expr -> expr AND expr .
+    (38) expr -> expr . AND expr
+    (39) expr -> expr . OR expr
+
+    AND             reduce using rule 38 (expr -> expr AND expr .)
+    OR              reduce using rule 38 (expr -> expr AND expr .)
+    SEMICOLON       reduce using rule 38 (expr -> expr AND expr .)
+    CREATE          reduce using rule 38 (expr -> expr AND expr .)
+    USE             reduce using rule 38 (expr -> expr AND expr .)
+    SHOW            reduce using rule 38 (expr -> expr AND expr .)
+    INSERT          reduce using rule 38 (expr -> expr AND expr .)
+    SELECT          reduce using rule 38 (expr -> expr AND expr .)
+    UPDATE          reduce using rule 38 (expr -> expr AND expr .)
+    DELETE          reduce using rule 38 (expr -> expr AND expr .)
+    DROP            reduce using rule 38 (expr -> expr AND expr .)
+    EXIT            reduce using rule 38 (expr -> expr AND expr .)
+    $end            reduce using rule 38 (expr -> expr AND expr .)
+    RPAREN          reduce using rule 38 (expr -> expr AND expr .)
+
+  ! AND             [ shift and go to state 69 ]
+  ! OR              [ shift and go to state 70 ]
+
+
+state 84
+
+    (39) expr -> expr OR expr .
+    (38) expr -> expr . AND expr
+    (39) expr -> expr . OR expr
+
+    OR              reduce using rule 39 (expr -> expr OR expr .)
+    SEMICOLON       reduce using rule 39 (expr -> expr OR expr .)
+    CREATE          reduce using rule 39 (expr -> expr OR expr .)
+    USE             reduce using rule 39 (expr -> expr OR expr .)
+    SHOW            reduce using rule 39 (expr -> expr OR expr .)
+    INSERT          reduce using rule 39 (expr -> expr OR expr .)
+    SELECT          reduce using rule 39 (expr -> expr OR expr .)
+    UPDATE          reduce using rule 39 (expr -> expr OR expr .)
+    DELETE          reduce using rule 39 (expr -> expr OR expr .)
+    DROP            reduce using rule 39 (expr -> expr OR expr .)
+    EXIT            reduce using rule 39 (expr -> expr OR expr .)
+    $end            reduce using rule 39 (expr -> expr OR expr .)
+    RPAREN          reduce using rule 39 (expr -> expr OR expr .)
+    AND             shift and go to state 69
+
+  ! AND             [ reduce using rule 39 (expr -> expr OR expr .) ]
+  ! OR              [ shift and go to state 70 ]
+
+
+state 85
+
+    (40) expr -> value EQ value .
+
+    AND             reduce using rule 40 (expr -> value EQ value .)
+    OR              reduce using rule 40 (expr -> value EQ value .)
+    SEMICOLON       reduce using rule 40 (expr -> value EQ value .)
+    CREATE          reduce using rule 40 (expr -> value EQ value .)
+    USE             reduce using rule 40 (expr -> value EQ value .)
+    SHOW            reduce using rule 40 (expr -> value EQ value .)
+    INSERT          reduce using rule 40 (expr -> value EQ value .)
+    SELECT          reduce using rule 40 (expr -> value EQ value .)
+    UPDATE          reduce using rule 40 (expr -> value EQ value .)
+    DELETE          reduce using rule 40 (expr -> value EQ value .)
+    DROP            reduce using rule 40 (expr -> value EQ value .)
+    EXIT            reduce using rule 40 (expr -> value EQ value .)
+    $end            reduce using rule 40 (expr -> value EQ value .)
+    RPAREN          reduce using rule 40 (expr -> value EQ value .)
+
+
+state 86
+
+    (41) expr -> value NE value .
+
+    AND             reduce using rule 41 (expr -> value NE value .)
+    OR              reduce using rule 41 (expr -> value NE value .)
+    SEMICOLON       reduce using rule 41 (expr -> value NE value .)
+    CREATE          reduce using rule 41 (expr -> value NE value .)
+    USE             reduce using rule 41 (expr -> value NE value .)
+    SHOW            reduce using rule 41 (expr -> value NE value .)
+    INSERT          reduce using rule 41 (expr -> value NE value .)
+    SELECT          reduce using rule 41 (expr -> value NE value .)
+    UPDATE          reduce using rule 41 (expr -> value NE value .)
+    DELETE          reduce using rule 41 (expr -> value NE value .)
+    DROP            reduce using rule 41 (expr -> value NE value .)
+    EXIT            reduce using rule 41 (expr -> value NE value .)
+    $end            reduce using rule 41 (expr -> value NE value .)
+    RPAREN          reduce using rule 41 (expr -> value NE value .)
+
+
+state 87
+
+    (42) expr -> value LT value .
+
+    AND             reduce using rule 42 (expr -> value LT value .)
+    OR              reduce using rule 42 (expr -> value LT value .)
+    SEMICOLON       reduce using rule 42 (expr -> value LT value .)
+    CREATE          reduce using rule 42 (expr -> value LT value .)
+    USE             reduce using rule 42 (expr -> value LT value .)
+    SHOW            reduce using rule 42 (expr -> value LT value .)
+    INSERT          reduce using rule 42 (expr -> value LT value .)
+    SELECT          reduce using rule 42 (expr -> value LT value .)
+    UPDATE          reduce using rule 42 (expr -> value LT value .)
+    DELETE          reduce using rule 42 (expr -> value LT value .)
+    DROP            reduce using rule 42 (expr -> value LT value .)
+    EXIT            reduce using rule 42 (expr -> value LT value .)
+    $end            reduce using rule 42 (expr -> value LT value .)
+    RPAREN          reduce using rule 42 (expr -> value LT value .)
+
+
+state 88
+
+    (43) expr -> value LE value .
+
+    AND             reduce using rule 43 (expr -> value LE value .)
+    OR              reduce using rule 43 (expr -> value LE value .)
+    SEMICOLON       reduce using rule 43 (expr -> value LE value .)
+    CREATE          reduce using rule 43 (expr -> value LE value .)
+    USE             reduce using rule 43 (expr -> value LE value .)
+    SHOW            reduce using rule 43 (expr -> value LE value .)
+    INSERT          reduce using rule 43 (expr -> value LE value .)
+    SELECT          reduce using rule 43 (expr -> value LE value .)
+    UPDATE          reduce using rule 43 (expr -> value LE value .)
+    DELETE          reduce using rule 43 (expr -> value LE value .)
+    DROP            reduce using rule 43 (expr -> value LE value .)
+    EXIT            reduce using rule 43 (expr -> value LE value .)
+    $end            reduce using rule 43 (expr -> value LE value .)
+    RPAREN          reduce using rule 43 (expr -> value LE value .)
+
+
+state 89
+
+    (44) expr -> value GT value .
+
+    AND             reduce using rule 44 (expr -> value GT value .)
+    OR              reduce using rule 44 (expr -> value GT value .)
+    SEMICOLON       reduce using rule 44 (expr -> value GT value .)
+    CREATE          reduce using rule 44 (expr -> value GT value .)
+    USE             reduce using rule 44 (expr -> value GT value .)
+    SHOW            reduce using rule 44 (expr -> value GT value .)
+    INSERT          reduce using rule 44 (expr -> value GT value .)
+    SELECT          reduce using rule 44 (expr -> value GT value .)
+    UPDATE          reduce using rule 44 (expr -> value GT value .)
+    DELETE          reduce using rule 44 (expr -> value GT value .)
+    DROP            reduce using rule 44 (expr -> value GT value .)
+    EXIT            reduce using rule 44 (expr -> value GT value .)
+    $end            reduce using rule 44 (expr -> value GT value .)
+    RPAREN          reduce using rule 44 (expr -> value GT value .)
+
+
+state 90
+
+    (45) expr -> value GE value .
+
+    AND             reduce using rule 45 (expr -> value GE value .)
+    OR              reduce using rule 45 (expr -> value GE value .)
+    SEMICOLON       reduce using rule 45 (expr -> value GE value .)
+    CREATE          reduce using rule 45 (expr -> value GE value .)
+    USE             reduce using rule 45 (expr -> value GE value .)
+    SHOW            reduce using rule 45 (expr -> value GE value .)
+    INSERT          reduce using rule 45 (expr -> value GE value .)
+    SELECT          reduce using rule 45 (expr -> value GE value .)
+    UPDATE          reduce using rule 45 (expr -> value GE value .)
+    DELETE          reduce using rule 45 (expr -> value GE value .)
+    DROP            reduce using rule 45 (expr -> value GE value .)
+    EXIT            reduce using rule 45 (expr -> value GE value .)
+    $end            reduce using rule 45 (expr -> value GE value .)
+    RPAREN          reduce using rule 45 (expr -> value GE value .)
+
+
+state 91
+
+    (46) expr -> LPAREN expr RPAREN .
+
+    AND             reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    OR              reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    SEMICOLON       reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    CREATE          reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    USE             reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    SHOW            reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    INSERT          reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    SELECT          reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    UPDATE          reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    DELETE          reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    DROP            reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    EXIT            reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    $end            reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+    RPAREN          reduce using rule 46 (expr -> LPAREN expr RPAREN .)
+
+
+state 92
 
     (22) column_def -> ID CHAR LPAREN NUMBER . RPAREN
 
-    RPAREN          shift and go to state 75
+    RPAREN          shift and go to state 94
 
 
-state 74
+state 93
 
     (26) value_list -> value_list COMMA value .
 
@@ -1109,7 +1555,7 @@ state 74
     COMMA           reduce using rule 26 (value_list -> value_list COMMA value .)
 
 
-state 75
+state 94
 
     (22) column_def -> ID CHAR LPAREN NUMBER RPAREN .
 

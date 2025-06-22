@@ -24,6 +24,38 @@ def use_database(db_name):
     _use_db(db_name)
 
 
+# ====== 数据表 ======
+
+
+def eval_expr(expr, row):
+    if expr is None:
+        return True
+    etype = expr[0]
+    if etype == "cmp":
+        _, op, left, right = expr
+        # 左右可以是列名也可以是常量
+        left_val = row.get(left) if isinstance(left, str) and left in row else left
+        right_val = row.get(right) if isinstance(right, str) and right in row else right
+        return {
+            "=": left_val == right_val,
+            "!=": left_val != right_val,
+            "<": left_val < right_val,
+            "<=": left_val <= right_val,
+            ">": left_val > right_val,
+            ">=": left_val >= right_val,
+        }[op]
+    elif etype == "binop":
+        _, op, left_expr, right_expr = expr
+        if op == "AND":
+            return eval_expr(left_expr, row) and eval_expr(right_expr, row)
+        elif op == "OR":
+            return eval_expr(left_expr, row) or eval_expr(right_expr, row)
+    elif etype == "const":
+        return expr[1]
+    else:
+        raise Exception(f"未知表达式类型: {etype}")
+
+
 def create_table(name, columns):
     meta = load_meta()
     if name in meta:
@@ -83,31 +115,27 @@ def select_all(table_name):
         for row in data:
             print(row)
 
-
 def delete_from(table_name, where=None):
     data = load_table(table_name)
-    src_len = len(data)
-    if where is None:
-        deleted = len(data)
-        data = []
-    else:
-        key, val = where
-        data = [row for row in data if not match(row, key, val, deleted)]
-        deleted = src_len - len(data)
-
-    save_table(table_name, data)
-    print(f"已删除 {deleted} 条记录")
-
+    new_data = []
+    deleted = 0
+    for row in data:
+        if not eval_expr(where, row):
+            new_data.append(row)
+        else:
+            deleted += 1
+    save_table(table_name, new_data)
+    print(f"删除了 {deleted} 条记录")
 
 def update_table(table_name, set_key, set_val, where=None):
     data = load_table(table_name)
-    count = 0
+    updated = 0
     for row in data:
-        if where is None or str(row.get(where[0])) == str(where[1]):
+        if eval_expr(where, row):
             row[set_key] = set_val
-            count += 1
+            updated += 1
     save_table(table_name, data)
-    print(f"更新了 {count} 条记录")
+    print(f"更新了 {updated} 条记录")
 
 
 def match(row, key, val, deleted_counter=None):

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CHAR COMMA CREATE DATABASE DELETE DROP EQ EXIT FROM GE GT ID INSERT INT INTO LE LPAREN LT NE NUMBER RPAREN SELECT SEMICOLON SET SHOW STAR STRING TABLE TABLES UPDATE USE VALUES WHEREstatements : statements statement\n                  | statementstatement : command SEMICOLON\n                 | commandcommand : create_database\n               | use_database\n               | create_table\n               | show_tables\n               | insert\n               | select\n               | update\n               | delete\n               | drop_table\n               | drop_database\n               | exitcreate_database : CREATE DATABASE IDuse_database : USE IDcreate_table : CREATE TABLE ID LPAREN column_def_list RPARENcolumn_def_list : column_def\n                       | column_def_list COMMA column_defcolumn_def : ID INT\n                  | ID CHAR LPAREN NUMBER RPARENshow_tables : SHOW TABLESinsert : INSERT INTO ID VALUES LPAREN value_list RPARENvalue_list : value\n                  | value_list COMMA valuevalue : NUMBER\n             | STRINGselect : SELECT STAR FROM IDupdate : UPDATE ID SET ID EQ value where_clause_optdelete : DELETE FROM ID where_clause_optdrop_table : DROP TABLE IDdrop_database : DROP DATABASE IDexit : EXITwhere_clause_opt : WHERE ID EQ value\n                        | emptyempty :'
+_lr_signature = 'leftORleftANDnonassocEQNELTLEGTGEAND CHAR COMMA CREATE DATABASE DELETE DROP EQ EXIT FROM GE GT ID INSERT INT INTO LE LPAREN LT NE NUMBER OR RPAREN SELECT SEMICOLON SET SHOW STAR STRING TABLE TABLES UPDATE USE VALUES WHEREstatements : statements statement\n    | statementstatement : command SEMICOLON\n    | commandcommand : create_database\n    | use_database\n    | create_table\n    | show_tables\n    | insert\n    | select\n    | update\n    | delete\n    | drop_table\n    | drop_database\n    | exitcreate_database : CREATE DATABASE IDuse_database : USE IDcreate_table : CREATE TABLE ID LPAREN column_def_list RPARENcolumn_def_list : column_def\n    | column_def_list COMMA column_defcolumn_def : ID INT\n    | ID CHAR LPAREN NUMBER RPARENshow_tables : SHOW TABLESinsert : INSERT INTO ID VALUES LPAREN value_list RPARENvalue_list : value\n    | value_list COMMA valuevalue : NUMBER\n    | STRING\n    | IDselect : SELECT STAR FROM IDupdate : UPDATE ID SET ID EQ value where_clause_optdelete : DELETE FROM ID where_clause_optdrop_table : DROP TABLE IDdrop_database : DROP DATABASE IDexit : EXITwhere_clause_opt : WHERE expr\n    | emptyexpr : expr AND expr\n    | expr OR exprexpr : value EQ value\n    | value NE value\n    | value LT value\n    | value LE value\n    | value GT value\n    | value GE valueexpr : LPAREN expr RPARENexpr : valueempty :'
     
-_lr_action_items = {'CREATE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[15,15,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'USE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[16,16,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'SHOW':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[17,17,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'INSERT':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[18,18,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'SELECT':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[19,19,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'UPDATE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[20,20,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'DELETE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[21,21,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'DROP':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[22,22,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'EXIT':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[23,23,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'$end':([1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[0,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-1,-3,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'SEMICOLON':([3,4,5,6,7,8,9,10,11,12,13,14,23,28,29,36,41,42,43,46,48,50,59,63,64,65,69,71,72,],[25,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-34,-17,-23,-16,-37,-32,-33,-29,-31,-36,-18,-27,-28,-37,-24,-30,-35,]),'DATABASE':([15,22,],[26,35,]),'TABLE':([15,22,],[27,34,]),'ID':([16,20,26,27,30,33,34,35,39,40,44,49,60,],[28,32,36,37,38,41,42,43,46,47,51,56,51,]),'TABLES':([17,],[29,]),'INTO':([18,],[30,]),'STAR':([19,],[31,]),'FROM':([21,31,],[33,39,]),'SET':([32,],[40,]),'LPAREN':([37,45,58,],[44,54,67,]),'VALUES':([38,],[45,]),'WHERE':([41,63,64,65,],[49,-27,-28,49,]),'EQ':([47,56,],[55,66,]),'INT':([51,],[57,]),'CHAR':([51,],[58,]),'RPAREN':([52,53,57,61,62,63,64,68,73,74,75,],[59,-19,-21,69,-25,-27,-28,-20,75,-26,-22,]),'COMMA':([52,53,57,61,62,63,64,68,74,75,],[60,-19,-21,70,-25,-27,-28,-20,-26,-22,]),'NUMBER':([54,55,66,67,70,],[63,63,63,73,63,]),'STRING':([54,55,66,70,],[64,64,64,64,]),}
+_lr_action_items = {'CREATE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[15,15,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'USE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[16,16,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'SHOW':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[17,17,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'INSERT':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[18,18,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'SELECT':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[19,19,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'UPDATE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[20,20,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'DELETE':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[21,21,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'DROP':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[22,22,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'EXIT':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[23,23,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'$end':([1,2,3,4,5,6,7,8,9,10,11,12,13,14,23,24,25,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[0,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-1,-3,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'SEMICOLON':([3,4,5,6,7,8,9,10,11,12,13,14,23,28,29,36,41,42,43,46,48,50,56,57,59,60,61,64,68,80,82,83,84,85,86,87,88,89,90,91,],[25,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-35,-17,-23,-16,-48,-33,-34,-30,-32,-37,-36,-47,-27,-28,-29,-18,-48,-24,-31,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'DATABASE':([15,22,],[26,35,]),'TABLE':([15,22,],[27,34,]),'ID':([16,20,26,27,30,33,34,35,39,40,44,49,54,55,58,65,69,70,71,72,73,74,75,76,81,],[28,32,36,37,38,41,42,43,46,47,51,61,61,61,61,51,61,61,61,61,61,61,61,61,61,]),'TABLES':([17,],[29,]),'INTO':([18,],[30,]),'STAR':([19,],[31,]),'FROM':([21,31,],[33,39,]),'SET':([32,],[40,]),'LPAREN':([37,45,49,58,63,69,70,],[44,54,58,58,78,58,58,]),'VALUES':([38,],[45,]),'WHERE':([41,59,60,61,68,],[49,-27,-28,-29,49,]),'EQ':([47,57,59,60,61,],[55,71,-27,-28,-29,]),'NUMBER':([49,54,55,58,69,70,71,72,73,74,75,76,78,81,],[59,59,59,59,59,59,59,59,59,59,59,59,92,59,]),'STRING':([49,54,55,58,69,70,71,72,73,74,75,76,81,],[60,60,60,60,60,60,60,60,60,60,60,60,60,]),'INT':([51,],[62,]),'CHAR':([51,],[63,]),'RPAREN':([52,53,57,59,60,61,62,66,67,77,79,83,84,85,86,87,88,89,90,91,92,93,94,],[64,-19,-47,-27,-28,-29,-21,80,-25,91,-20,-38,-39,-40,-41,-42,-43,-44,-45,-46,94,-26,-22,]),'COMMA':([52,53,59,60,61,62,66,67,79,93,94,],[65,-19,-27,-28,-29,-21,81,-25,-20,-26,-22,]),'AND':([56,57,59,60,61,77,83,84,85,86,87,88,89,90,91,],[69,-47,-27,-28,-29,69,-38,69,-40,-41,-42,-43,-44,-45,-46,]),'OR':([56,57,59,60,61,77,83,84,85,86,87,88,89,90,91,],[70,-47,-27,-28,-29,70,-38,-39,-40,-41,-42,-43,-44,-45,-46,]),'NE':([57,59,60,61,],[72,-27,-28,-29,]),'LT':([57,59,60,61,],[73,-27,-28,-29,]),'LE':([57,59,60,61,],[74,-27,-28,-29,]),'GT':([57,59,60,61,],[75,-27,-28,-29,]),'GE':([57,59,60,61,],[76,-27,-28,-29,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'statements':([0,],[1,]),'statement':([0,1,],[2,24,]),'command':([0,1,],[3,3,]),'create_database':([0,1,],[4,4,]),'use_database':([0,1,],[5,5,]),'create_table':([0,1,],[6,6,]),'show_tables':([0,1,],[7,7,]),'insert':([0,1,],[8,8,]),'select':([0,1,],[9,9,]),'update':([0,1,],[10,10,]),'delete':([0,1,],[11,11,]),'drop_table':([0,1,],[12,12,]),'drop_database':([0,1,],[13,13,]),'exit':([0,1,],[14,14,]),'where_clause_opt':([41,65,],[48,71,]),'empty':([41,65,],[50,50,]),'column_def_list':([44,],[52,]),'column_def':([44,60,],[53,68,]),'value_list':([54,],[61,]),'value':([54,55,66,70,],[62,65,72,74,]),}
+_lr_goto_items = {'statements':([0,],[1,]),'statement':([0,1,],[2,24,]),'command':([0,1,],[3,3,]),'create_database':([0,1,],[4,4,]),'use_database':([0,1,],[5,5,]),'create_table':([0,1,],[6,6,]),'show_tables':([0,1,],[7,7,]),'insert':([0,1,],[8,8,]),'select':([0,1,],[9,9,]),'update':([0,1,],[10,10,]),'delete':([0,1,],[11,11,]),'drop_table':([0,1,],[12,12,]),'drop_database':([0,1,],[13,13,]),'exit':([0,1,],[14,14,]),'where_clause_opt':([41,68,],[48,82,]),'empty':([41,68,],[50,50,]),'column_def_list':([44,],[52,]),'column_def':([44,65,],[53,79,]),'expr':([49,58,69,70,],[56,77,83,84,]),'value':([49,54,55,58,69,70,71,72,73,74,75,76,81,],[57,67,68,57,57,57,85,86,87,88,89,90,93,]),'value_list':([54,],[66,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,41 +27,52 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> statements","S'",1,None,None,None),
-  ('statements -> statements statement','statements',2,'p_statements','parser.py',10),
-  ('statements -> statement','statements',1,'p_statements','parser.py',11),
-  ('statement -> command SEMICOLON','statement',2,'p_statement','parser.py',16),
-  ('statement -> command','statement',1,'p_statement','parser.py',17),
-  ('command -> create_database','command',1,'p_command','parser.py',25),
-  ('command -> use_database','command',1,'p_command','parser.py',26),
-  ('command -> create_table','command',1,'p_command','parser.py',27),
-  ('command -> show_tables','command',1,'p_command','parser.py',28),
-  ('command -> insert','command',1,'p_command','parser.py',29),
-  ('command -> select','command',1,'p_command','parser.py',30),
-  ('command -> update','command',1,'p_command','parser.py',31),
-  ('command -> delete','command',1,'p_command','parser.py',32),
-  ('command -> drop_table','command',1,'p_command','parser.py',33),
-  ('command -> drop_database','command',1,'p_command','parser.py',34),
-  ('command -> exit','command',1,'p_command','parser.py',35),
-  ('create_database -> CREATE DATABASE ID','create_database',3,'p_create_database','parser.py',43),
-  ('use_database -> USE ID','use_database',2,'p_use_database','parser.py',51),
-  ('create_table -> CREATE TABLE ID LPAREN column_def_list RPAREN','create_table',6,'p_create_table','parser.py',59),
-  ('column_def_list -> column_def','column_def_list',1,'p_column_def_list','parser.py',63),
-  ('column_def_list -> column_def_list COMMA column_def','column_def_list',3,'p_column_def_list','parser.py',64),
-  ('column_def -> ID INT','column_def',2,'p_column_def','parser.py',71),
-  ('column_def -> ID CHAR LPAREN NUMBER RPAREN','column_def',5,'p_column_def','parser.py',72),
-  ('show_tables -> SHOW TABLES','show_tables',2,'p_show_tables','parser.py',83),
-  ('insert -> INSERT INTO ID VALUES LPAREN value_list RPAREN','insert',7,'p_insert','parser.py',91),
-  ('value_list -> value','value_list',1,'p_value_list','parser.py',95),
-  ('value_list -> value_list COMMA value','value_list',3,'p_value_list','parser.py',96),
-  ('value -> NUMBER','value',1,'p_value','parser.py',103),
-  ('value -> STRING','value',1,'p_value','parser.py',104),
-  ('select -> SELECT STAR FROM ID','select',4,'p_select','parser.py',112),
-  ('update -> UPDATE ID SET ID EQ value where_clause_opt','update',7,'p_update','parser.py',120),
-  ('delete -> DELETE FROM ID where_clause_opt','delete',4,'p_delete','parser.py',128),
-  ('drop_table -> DROP TABLE ID','drop_table',3,'p_drop_table','parser.py',136),
-  ('drop_database -> DROP DATABASE ID','drop_database',3,'p_drop_database','parser.py',144),
-  ('exit -> EXIT','exit',1,'p_exit','parser.py',152),
-  ('where_clause_opt -> WHERE ID EQ value','where_clause_opt',4,'p_where_clause_opt','parser.py',160),
-  ('where_clause_opt -> empty','where_clause_opt',1,'p_where_clause_opt','parser.py',161),
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',172),
+  ('statements -> statements statement','statements',2,'p_statements','parser.py',18),
+  ('statements -> statement','statements',1,'p_statements','parser.py',19),
+  ('statement -> command SEMICOLON','statement',2,'p_statement','parser.py',25),
+  ('statement -> command','statement',1,'p_statement','parser.py',26),
+  ('command -> create_database','command',1,'p_command','parser.py',36),
+  ('command -> use_database','command',1,'p_command','parser.py',37),
+  ('command -> create_table','command',1,'p_command','parser.py',38),
+  ('command -> show_tables','command',1,'p_command','parser.py',39),
+  ('command -> insert','command',1,'p_command','parser.py',40),
+  ('command -> select','command',1,'p_command','parser.py',41),
+  ('command -> update','command',1,'p_command','parser.py',42),
+  ('command -> delete','command',1,'p_command','parser.py',43),
+  ('command -> drop_table','command',1,'p_command','parser.py',44),
+  ('command -> drop_database','command',1,'p_command','parser.py',45),
+  ('command -> exit','command',1,'p_command','parser.py',46),
+  ('create_database -> CREATE DATABASE ID','create_database',3,'p_create_database','parser.py',56),
+  ('use_database -> USE ID','use_database',2,'p_use_database','parser.py',66),
+  ('create_table -> CREATE TABLE ID LPAREN column_def_list RPAREN','create_table',6,'p_create_table','parser.py',76),
+  ('column_def_list -> column_def','column_def_list',1,'p_column_def_list','parser.py',81),
+  ('column_def_list -> column_def_list COMMA column_def','column_def_list',3,'p_column_def_list','parser.py',82),
+  ('column_def -> ID INT','column_def',2,'p_column_def','parser.py',90),
+  ('column_def -> ID CHAR LPAREN NUMBER RPAREN','column_def',5,'p_column_def','parser.py',91),
+  ('show_tables -> SHOW TABLES','show_tables',2,'p_show_tables','parser.py',104),
+  ('insert -> INSERT INTO ID VALUES LPAREN value_list RPAREN','insert',7,'p_insert','parser.py',114),
+  ('value_list -> value','value_list',1,'p_value_list','parser.py',119),
+  ('value_list -> value_list COMMA value','value_list',3,'p_value_list','parser.py',120),
+  ('value -> NUMBER','value',1,'p_value','parser.py',128),
+  ('value -> STRING','value',1,'p_value','parser.py',129),
+  ('value -> ID','value',1,'p_value','parser.py',130),
+  ('select -> SELECT STAR FROM ID','select',4,'p_select','parser.py',140),
+  ('update -> UPDATE ID SET ID EQ value where_clause_opt','update',7,'p_update','parser.py',150),
+  ('delete -> DELETE FROM ID where_clause_opt','delete',4,'p_delete','parser.py',160),
+  ('drop_table -> DROP TABLE ID','drop_table',3,'p_drop_table','parser.py',170),
+  ('drop_database -> DROP DATABASE ID','drop_database',3,'p_drop_database','parser.py',180),
+  ('exit -> EXIT','exit',1,'p_exit','parser.py',190),
+  ('where_clause_opt -> WHERE expr','where_clause_opt',2,'p_where_clause_opt','parser.py',202),
+  ('where_clause_opt -> empty','where_clause_opt',1,'p_where_clause_opt','parser.py',203),
+  ('expr -> expr AND expr','expr',3,'p_expr_binop','parser.py',211),
+  ('expr -> expr OR expr','expr',3,'p_expr_binop','parser.py',212),
+  ('expr -> value EQ value','expr',3,'p_expr_cmp','parser.py',217),
+  ('expr -> value NE value','expr',3,'p_expr_cmp','parser.py',218),
+  ('expr -> value LT value','expr',3,'p_expr_cmp','parser.py',219),
+  ('expr -> value LE value','expr',3,'p_expr_cmp','parser.py',220),
+  ('expr -> value GT value','expr',3,'p_expr_cmp','parser.py',221),
+  ('expr -> value GE value','expr',3,'p_expr_cmp','parser.py',222),
+  ('expr -> LPAREN expr RPAREN','expr',3,'p_expr_parens','parser.py',227),
+  ('expr -> value','expr',1,'p_expr_value','parser.py',232),
+  ('empty -> <empty>','empty',0,'p_empty','parser.py',242),
 ]
