@@ -64,12 +64,12 @@ uv run shell.py
 
 <details open>
 <summary>
-使用 uv:
+使用 python:
 </summary>
 
 ```
 cd naosql
-uv run shell.py
+python shell.py
 ```
 
 </details>
