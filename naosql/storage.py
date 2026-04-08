@@ -1,4 +1,3 @@
-# storage.py
 import json
 import os
 from catalog import get_current_db

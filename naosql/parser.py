@@ -137,8 +137,28 @@ def p_value(p):
 
 
 def p_select(p):
-    "select : SELECT STAR FROM ID"
-    executor.select_all(p[4])
+    """select : SELECT select_fields FROM ID where_clause_opt"""
+    p[0] = ("select", p[2], p[4], p[5])
+    executor.select(p[2], p[4], p[5])
+
+
+def p_select_fields_star(p):
+    "select_fields : STAR"
+    p[0] = ["*"]
+
+
+def p_select_fields_list(p):
+    "select_fields : id_list"
+    p[0] = p[1]
+
+
+def p_id_list(p):
+    """id_list : ID
+    | id_list COMMA ID"""
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
 
 
 # -------------------------------

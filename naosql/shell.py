@@ -1,4 +1,3 @@
-# shell.py
 from parser import parser
 from catalog import get_current_db
 

@@ -27,35 +27,6 @@ def use_database(db_name):
 # ====== 数据表 ======
 
 
-def eval_expr(expr, row):
-    if expr is None:
-        return True
-    etype = expr[0]
-    if etype == "cmp":
-        _, op, left, right = expr
-        # 左右可以是列名也可以是常量
-        left_val = row.get(left) if isinstance(left, str) and left in row else left
-        right_val = row.get(right) if isinstance(right, str) and right in row else right
-        return {
-            "=": left_val == right_val,
-            "!=": left_val != right_val,
-            "<": left_val < right_val,
-            "<=": left_val <= right_val,
-            ">": left_val > right_val,
-            ">=": left_val >= right_val,
-        }[op]
-    elif etype == "binop":
-        _, op, left_expr, right_expr = expr
-        if op == "AND":
-            return eval_expr(left_expr, row) and eval_expr(right_expr, row)
-        elif op == "OR":
-            return eval_expr(left_expr, row) or eval_expr(right_expr, row)
-    elif etype == "const":
-        return expr[1]
-    else:
-        raise Exception(f"未知表达式类型: {etype}")
-
-
 def create_table(name, columns):
     meta = load_meta()
     if name in meta:
@@ -107,13 +78,28 @@ def insert_into(table_name, values):
     print(f"插入成功：{row}")
 
 
-def select_all(table_name):
+def select(fields, table_name, where_expr):
     data = load_table(table_name)
-    if not data:
-        print("（无记录）")
-    else:
-        for row in data:
+    meta = load_meta()
+    if table_name not in meta:
+        raise Exception(f"表 {table_name} 不存在")
+    schema = meta[table_name]
+    schema_cols = [col for col, _ in schema]
+
+    for row in data:
+        if not eval_expr(where_expr, row):
+            continue
+
+        if fields == ["*"]:
             print(row)
+        else:
+            proj = {}
+            for col in fields:
+                if col not in schema_cols:
+                    raise Exception(f"字段 {col} 不存在于表 {table_name}")
+                proj[col] = row[col]
+            print(proj)
+
 
 def delete_from(table_name, where=None):
     data = load_table(table_name)
@@ -127,6 +113,7 @@ def delete_from(table_name, where=None):
     save_table(table_name, new_data)
     print(f"删除了 {deleted} 条记录")
 
+
 def update_table(table_name, set_key, set_val, where=None):
     data = load_table(table_name)
     updated = 0
@@ -138,9 +125,30 @@ def update_table(table_name, set_key, set_val, where=None):
     print(f"更新了 {updated} 条记录")
 
 
-def match(row, key, val, deleted_counter=None):
-    if str(row.get(key)) == str(val):
-        if deleted_counter is not None:
-            deleted_counter += 1
+def eval_expr(expr, row):
+    if expr is None:
         return True
-    return False
+    etype = expr[0]
+    if etype == "cmp":
+        _, op, left, right = expr
+        # 左右可以是列名也可以是常量
+        left_val = row.get(left) if isinstance(left, str) and left in row else left
+        right_val = row.get(right) if isinstance(right, str) and right in row else right
+        return {
+            "=": left_val == right_val,
+            "!=": left_val != right_val,
+            "<": left_val < right_val,
+            "<=": left_val <= right_val,
+            ">": left_val > right_val,
+            ">=": left_val >= right_val,
+        }[op]
+    elif etype == "binop":
+        _, op, left_expr, right_expr = expr
+        if op == "AND":
+            return eval_expr(left_expr, row) and eval_expr(right_expr, row)
+        elif op == "OR":
+            return eval_expr(left_expr, row) or eval_expr(right_expr, row)
+    elif etype == "const":
+        return expr[1]
+    else:
+        raise Exception(f"未知表达式类型: {etype}")
